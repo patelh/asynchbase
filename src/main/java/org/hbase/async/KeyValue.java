@@ -61,8 +61,8 @@ public final class KeyValue implements Comparable<KeyValue> {
   private final byte[] family;  // Max length: Byte.MAX_VALUE  =   128
   private final byte[] qualifier;
   private final byte[] value;
-  //private final long timestamp; // TODO(tsuna): Do I care about those?
-  //private final byte type;      //              Will I need them?  Not sure.
+  private final long timestamp; // TODO(tsuna): Do I care about those?
+  private final byte type;      //              Will I need them?  Not sure.
 
   // Note: type can be one of:
   //   -  4  0b00000100  Put
@@ -81,15 +81,15 @@ public final class KeyValue implements Comparable<KeyValue> {
    */
   public KeyValue(final byte[] key,
                   final byte[] family, final byte[] qualifier,
-                  final byte[] value//,
-                  //final long timestamp, final byte type
+                  final byte[] value,
+                  final long timestamp, final byte type
                   ) {
     this.key = key;
     this.family = family;
     this.qualifier = qualifier;
     this.value = value;
-    //this.timestamp = timestamp;
-    //this.type = type;
+    this.timestamp = timestamp;
+    this.type = type;
   }
 
   /** Returns the row key.  */
@@ -107,13 +107,13 @@ public final class KeyValue implements Comparable<KeyValue> {
     return qualifier;
   }
 
-  //public long timestamp() {
-  //  return timestamp;
-  //}
+  public long timestamp() {
+    return timestamp;
+  }
 
-  //public byte type() {
-  //  return type;
-  //}
+  public byte type() {
+    return type;
+  }
 
   /** Returns the value, the contents of the cell.  */
   public byte[] value() {
@@ -170,8 +170,8 @@ public final class KeyValue implements Comparable<KeyValue> {
     Bytes.pretty(buf, qualifier);
     buf.append(", value=");
     Bytes.pretty(buf, value);
-    //buf.append(", timestamp=").append(timestamp)
-    //  .append(", type=").append(type);
+    buf.append(", timestamp=").append(timestamp)
+      .append(", type=").append(type);
     buf.append(')');
     return buf.toString();
   }
@@ -231,13 +231,13 @@ public final class KeyValue implements Comparable<KeyValue> {
               + qual_length + " + 8 + 1" + " != kl:" + rowkey_length);
     }
     if (prev == null) {
-      return new KeyValue(key, family, qualifier, /*timestamp, key_type,*/
-                          value);
+      return new KeyValue(key, family, qualifier, value, timestamp, key_type);
     } else {
       return new KeyValue(Bytes.deDup(prev.key, key),
                           Bytes.deDup(prev.family, family),
                           Bytes.deDup(prev.qualifier, qualifier),
-                          /*timestamp, key_type,*/ value);
+                          value,
+                          timestamp, key_type);
     }
   }
 

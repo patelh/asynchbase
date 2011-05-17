@@ -4,7 +4,7 @@
   <groupId>com.stumbleupon</groupId>
   <artifactId>asynchbase</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <name>asynchbase</name>
   <url>http://maven.apache.org</url>
 
